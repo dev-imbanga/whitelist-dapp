@@ -8,26 +8,15 @@ import "./whitelist.sol";
 
 contract CryptoDevs is ERC721Enumerable, Ownable {
 
-    //  _price is the price of one Crypto Dev NFT
     uint256 constant public _price = 0.01 ether;
-
-    // Max number of CryptoDevs that can ever exist
     uint256 constant public maxTokenIds = 20;
 
-    // whitelist contract instance
+
     Whitelist whitelist;
 
-    // Number of tokens reserved for whitelisted members
 
     uint256 public reservedTokens;
     uint256 public reservedTokensClaimed = 0;
-
-    /**
-      * @dev ERC721 constructor takes in a `name` and a `symbol` to the token collection.
-      * name in our case is `Crypto Devs` and symbol is `CD`.
-      * Constructor for Crypto Devs takes in the baseURI to set _baseTokenURI for the collection.
-      * It also initializes an instance of whitelist interface.
-      */
 
 
     constructor (address whitelistContract) ERC721("Crypto Devs", "CD") {
@@ -36,7 +25,7 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
     }
 
     function mint() public payable {
-        // Make sure we always leave enough room for whitelist reservations
+
         require(totalSupply() + reservedTokens - reservedTokensClaimed < maxTokenIds, "EXCEEDED_MAX_SUPPLY");
 
         // If user is part of the whitelist, make sure there is still reserved tokens left
@@ -52,10 +41,6 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
         _safeMint(msg.sender, tokenId);
     }
 
-    /**
-    * @dev withdraw sends all the ether in the contract
-    * to the owner of the contract
-      */
     function withdraw() public onlyOwner  {
         address _owner = owner();
         uint256 amount = address(this).balance;
@@ -63,6 +48,4 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
         require(sent, "Failed to send Ether");
     }
 }
-
-//contract address: 0xE0bd0437e8A09e6C1542E90159f0bA25BB1BcC05
 
